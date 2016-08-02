@@ -41,12 +41,6 @@ class ConfigPool implements IConfig
     public function __construct($cache = null)
     {
         $this->cache = $cache;
-        if ($cache) {
-            $this->conf = $this->loadCache();
-            if ($this->conf) {
-                $this->useCache = true;
-            }
-        }
     }
 
     /**
@@ -148,7 +142,9 @@ class ConfigPool implements IConfig
     public function load()
     {
         $this->conf = $this->loadCache();
-        if (!$this->conf) {
+        if ($this->conf) {
+            $this->useCache = true;
+        } else {
             foreach ($this->sources as $source) {
                 if ($source instanceof IConfigSource) {
                     $conf = $source->load();
@@ -157,10 +153,10 @@ class ConfigPool implements IConfig
                     }
                 }
             }
+            $this->saveCache();
         }
         return $this;
     }
-
 
     /**
      * Save conf to cache file.

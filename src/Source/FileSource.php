@@ -70,7 +70,7 @@ class FileSource extends AbstractSource
             $conf = $dloader->load($confFile);
             $this->conf = array_merge($this->conf, $conf);
         }
-        return $this;
+        return $this->conf;
     }
 
     /**

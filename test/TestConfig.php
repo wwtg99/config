@@ -130,14 +130,15 @@ class TestConfig extends PHPUnit_Framework_TestCase
         $source->addLoader(new \Wwtg99\Config\Source\Loader\JsonLoader());
         $conf->addSource($source);
         $conf->load();
-        $this->assertEquals([], $conf->export());
+        $arr = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'conf1.json'), true);
+        $this->assertEquals($arr, $conf->export());
         $this->assertEquals(true, $conf->has('a'));
         $this->assertEquals('val1', $conf->get('a'));
         $this->assertEquals(2, $conf->get('b.bb.1'));
         $this->assertEquals('aa', $conf->get('b.bb.2', 'aa'));
-        $this->assertEquals(['a'=>'val1', 'b'=>['bb'=>[1=>2]]], $conf->export());
         $conf->set('c.cc', true);
-        $this->assertEquals(['a'=>'val1', 'b'=>['bb'=>[1=>2]], 'c'=>['cc'=>true]], $conf->export());
+        $arr['c'] = ['cc'=>true];
+        $this->assertEquals($arr, $conf->export());
     }
 
     public function testCache()
