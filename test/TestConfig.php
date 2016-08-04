@@ -15,8 +15,6 @@ class TestConfig extends PHPUnit_Framework_TestCase
     {
         date_default_timezone_set('Asia/Shanghai');
         require '../vendor/autoload.php';
-        $loader = new \Wwtg99\ClassLoader\Loader(__DIR__ . DIRECTORY_SEPARATOR . '..', [['Wwtg99\\Config', 'src', true]]);
-        $loader->autoload();
     }
 
     public function testArrayUtils()
