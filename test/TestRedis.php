@@ -55,5 +55,20 @@ class TestRedis extends PHPUnit_Framework_TestCase
         foreach ($test_get as $k => $exp) {
             $this->assertEquals($exp, $rs->get($k), "Test $k");
         }
+        $this->assertEquals($conf, $rs->export());
+    }
+
+    /**
+     * @depends testRedisSource
+     */
+    public function testCache()
+    {
+        $param = ['host'=>'192.168.0.21'];
+        $conf = new \Wwtg99\Config\Common\ConfigPool();
+        $source = new \Wwtg99\Config\Source\RedisSource('config', $param);
+        $conf->addSource($source);
+        $conf->load();
+        $this->assertEquals('v1', $conf->get('a'));
+        $this->assertEquals('v2', $conf->get('d.d1'));
     }
 }

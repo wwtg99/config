@@ -6,21 +6,28 @@
 ```
 composer require "wwtg99/config"
 ```
+Or in composer.json require
+```
+"wwtg99/config": "*"
+```
 
 ## Usage
 
 ```
 $conf = new ConfigPool();  // or new ConfigPool('path/to/cache_file') to enable cache
-// define config resource
-// file config source should specify conf directories and conf files. Config will be merged by array_merge().
+// Define config resource
+// File config source should specify conf directories and conf files. Config will be merged by array_merge().
 $source = new FileSource(['default__conf', 'user_conf'], ['conf1.json', 'conf2.php']);
-// define file loader to handle conf files
+// Define file loader to handle conf files. Supported loaders: JsonLoader, PHPLoader, YamlLoader.
 $source->addLoader(new JsonLoader())->addLoader(new PHPLoader());
-// set source for config, one source or an array of sources
+// Redis source should defined the key (default config) and redis parameters.
+// If use redis, should disable cache to get better performance and enable to deploy central configuration.
+// $source = new RedisSource();
+// Set source for config, one source or an array of sources
 $conf->addSource($source);
-// load config
+// Load config
 $conf->load();
-// Get config
+// Get config, support dot(.) to search in array, ex: a.b.c search for a['b']['c']
 $val = $conf->get('name', 'default_val');
 // Use .(dot) to search array
 $val = $conf->get('arr.val');
@@ -28,7 +35,7 @@ $val = $conf->get('arr.val');
 $conf->set('name', 'val');
 // Get changed config by export()
 $config = $conf->export();
-// Sace changed config to cache if use cache file
+// Save changed config to cache if use cache file
 $conf->saveCache();
 ```
 
